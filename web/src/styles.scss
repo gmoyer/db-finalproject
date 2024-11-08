@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/bootstrap4-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+// Global colors
+:root {
+    --primary-color: #4A628A;
+    --primary-text: #FFFFFF;
+
+    --secondary-color: #7AB2D3;
+    --secondary-text: #FFFFFF;
+
+    --tertiary-color: #B9E5E8;
+    --tertiary-text: #000000;
+
+    --accent-color: #DFF2EB;
+    --accent-text: #000000;
+}
+
+// Global styles
+body {
+    margin: 0;
+}
+
+button {
+    color: var(--primary-text);
+    background-color: var(--primary-color);
+    padding: 0.5em 2em;
+}
+
+p-password {
+    display: inline-block;
+    > div {
+        width: 100%;
+        > input {
+            width: 100%;
+        }
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3em;
+    >* {
+        margin-bottom: 1em;
+    }
+}
+
+.error {
+    color: red;
+}
+.success {
+    color: green;
+}
+
+.text-input {
+    width: 300px;
+}
+
+label {
+    margin-right: 1em;
+}

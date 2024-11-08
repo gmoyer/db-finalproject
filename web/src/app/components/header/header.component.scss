@@ -1,0 +1,21 @@
+.header {
+    width: 100%;
+    padding: 1em 2em;
+    color: var(--secondary-text);
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    >* {
+        margin-right: 1em;
+    }
+}
+
+.user-settings {
+    cursor: pointer;
+}

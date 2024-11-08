@@ -23,7 +23,7 @@ namespace ServerSubscriptionManager.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<User>> Login([FromBody] LoginRequest loginRequest)
         {
             var user = await _userService.ValidateUserAsync(loginRequest.Username, loginRequest.Password);
             if (user == null)
@@ -46,7 +46,7 @@ namespace ServerSubscriptionManager.Controllers
 
             await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity), authProperties);
 
-            return Ok("Login successful");
+            return user;
         }
 
         [HttpPost("logout")]
@@ -61,9 +61,12 @@ namespace ServerSubscriptionManager.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return Ok(new { Authenticated = true, Username = User.Identity.Name });
+                return Ok(new { Authenticated = true });
             }
-            return Unauthorized();
+            else
+            {
+                return Ok(new { Authenticated = false });
+            }
         }
     }
 }

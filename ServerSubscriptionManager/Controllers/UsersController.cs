@@ -33,6 +33,20 @@ namespace ServerSubscriptionManager.Controllers
             return await _context.Users.ToListAsync();
         }
 
+        // GET: api/Users/me
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<ActionResult<User>> GetMe()
+        {
+            var user = await _userService.GetRequestingUser(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         [Authorize]
@@ -71,9 +85,24 @@ namespace ServerSubscriptionManager.Controllers
                 return Unauthorized();
             }
 
-            user.Name = userDto.Name;
-            user.Username = userDto.Username;
-            user.Password = userDto.Password;
+            var users = await _context.Users.ToListAsync();
+            if (users.Any(u => u.Username == userDto.Username && u != user))
+            {
+                return BadRequest("Username already exists");
+            }
+
+            if (userDto.Name != "")
+            {
+                user.Name = userDto.Name;
+            }
+            if (userDto.Username != "")
+            {
+                user.Username = userDto.Username;
+            }
+            if (userDto.Password != "")
+            {
+                user.Password = userDto.Password;
+            }
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -101,6 +130,12 @@ namespace ServerSubscriptionManager.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User userDto)
         {
+            var users = await _context.Users.ToListAsync();
+            if (users.Any(u => u.Username == userDto.Username))
+            {
+                return BadRequest("Username already exists");
+            }
+
             var user = new User
             {
                 Name = userDto.Name,
@@ -134,7 +169,7 @@ namespace ServerSubscriptionManager.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("User deleted");
         }
 
         private bool UserExists(long id)

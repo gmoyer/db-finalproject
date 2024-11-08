@@ -1,0 +1,46 @@
+<form class="card" [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="name">Edit name</label>
+        <input
+          class="text-input"
+          id="name"
+          formControlName="name"
+          type="text"
+          pInputText
+          placeholder="Enter a new name"
+        />
+      </div>
+    <div>
+        <label for="username">Edit username</label>
+        <input
+          class="text-input"
+          id="username"
+          formControlName="username"
+          type="text"
+          pInputText
+          placeholder="Enter a new username"
+        />
+      </div>
+    <div>
+      <label for="password">Edit password</label>
+      <p-password
+        class="text-input"
+        id="password"
+        formControlName="password"
+        placeholder="Enter a new password"
+        [toggleMask]="true"
+        [feedback]="false"
+      />
+    </div>
+    <div *ngIf="usernameExists" class="error">The username already exists. Please choose a new one.</div>
+    <div *ngIf="updateFailed" class="error">Failed to update profile. Please try again.</div>
+    <div *ngIf="updateSuccess" class="success">Profile updated successfully.</div>
+    <p-button type="submit" label="Update Profile" [disabled]="updateForm.invalid"/>
+    <p-button label="Delete User" (click)="confirmDelete = true"/>
+  </form>
+
+  <app-confirm *ngIf="confirmDelete"
+    message="Are you sure you want to delete your account? This action cannot be undone."
+    (confirm)="deleteUser()"
+    (cancel)="confirmDelete = false"
+  ></app-confirm>

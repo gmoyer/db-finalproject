@@ -29,9 +29,26 @@ namespace ServerSubscriptionManager.Services
             return user;
         }
 
+        public async Task<User?> GetRequestingUser(ClaimsPrincipal user)
+        {
+            string? userIdString = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdString == null)
+            {
+                return null;
+            }
+            var userId = long.Parse(userIdString);
+            return await _context.Users.FindAsync(userId);
+        }
+
         public bool Authorized(ClaimsPrincipal user, long userId)
         {
-            return user.HasClaim("NameIdentifier", userId.ToString()) || user.IsInRole("Admin");
+            string? userIdString = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdString == null)
+            {
+                return false;
+            }
+            var id = long.Parse(userIdString);
+            return userId == id || user.IsInRole("Admin");
         }
     }
 }

@@ -1,0 +1,38 @@
+<form class="card" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div *ngIf="registerRedirect" class="success">Registration successful! Please log in.</div>
+  <div *ngIf="deleteRedirect" class="success">User deleted successfully.</div>
+  <div>
+    <label for="username">Username</label>
+    <input
+      class="text-input"
+      id="username"
+      formControlName="username"
+      type="text"
+      pInputText
+      placeholder="Enter your username"
+      required
+    />
+    <div *ngIf="username?.invalid && username?.touched" class="error">
+      Username is required.
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <p-password
+      class="text-input"
+      id="password"
+      formControlName="password"
+      placeholder="Enter your password"
+      required
+      [toggleMask]="true"
+      [feedback]="false"
+    />
+    <div *ngIf="password?.invalid && password?.touched" class="error">
+      Password is required.
+    </div>
+  </div>
+  <div *ngIf="loginFailed" class="error">Invalid username or password. Please try again.</div>
+  <p-button type="submit" label="Sign In" [disabled]="loginForm.invalid"/>
+  <p-button label="Sign Up" [routerLink]="['/register']"/>
+</form>
