@@ -1,12 +1,27 @@
+using Microsoft.EntityFrameworkCore;
 using ServerSubscriptionManager.Context;
+using ServerSubscriptionManager.Triggers;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<SubscriptionContext>();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+builder.Services.AddDbContext<SubscriptionContext>(options =>
+{
+    options.UseTriggers(triggerOptions =>
+    {
+        triggerOptions.AddTrigger<PaymentTrigger>();
+        triggerOptions.AddTrigger<InvoiceTrigger>();
+        triggerOptions.AddTrigger<SubscriptionPeriodTrigger>();
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,8 +48,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"))
-    .AddPolicy("User", policy => policy.RequireClaim(ClaimTypes.Role, "User"));
+    .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
+    .AddPolicy("User", policy => policy.RequireRole("User"));
 
 var app = builder.Build();
 

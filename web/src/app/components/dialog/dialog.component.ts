@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-confirm',
-  templateUrl: './confirm.component.html',
-  styleUrl: './confirm.component.scss'
+  selector: 'app-dialog',
+  templateUrl: './dialog.component.html',
+  styleUrl: './dialog.component.scss'
 })
-export class ConfirmComponent {
+export class DialogComponent {
   @Input() message: string = "";
+  @Input() cancelable: boolean = true;
   @Output() confirm = new EventEmitter();
   @Output() cancel = new EventEmitter();
 

@@ -27,7 +27,7 @@ namespace ServerSubscriptionManager.Controllers
 
         // GET: api/Users
         [HttpGet]
-        [Authorize(Policy ="Admin")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
@@ -102,6 +102,10 @@ namespace ServerSubscriptionManager.Controllers
             if (userDto.Password != "")
             {
                 user.Password = userDto.Password;
+            }
+            if (userDto.AutoInvoice != user.AutoInvoice)
+            {
+                user.AutoInvoice = userDto.AutoInvoice;
             }
 
             _context.Entry(user).State = EntityState.Modified;

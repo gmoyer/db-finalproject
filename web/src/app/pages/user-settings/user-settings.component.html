@@ -39,8 +39,8 @@
     <p-button label="Delete User" (click)="confirmDelete = true"/>
   </form>
 
-  <app-confirm *ngIf="confirmDelete"
+  <app-dialog *ngIf="confirmDelete"
     message="Are you sure you want to delete your account? This action cannot be undone."
     (confirm)="deleteUser()"
     (cancel)="confirmDelete = false"
-  ></app-confirm>
+  ></app-dialog>

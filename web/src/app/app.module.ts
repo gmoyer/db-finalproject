@@ -1,26 +1,29 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './pages/login/login.component';
-import { HomeComponent } from './pages/home/home.component';
-import { HttpClient, HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
 // prime-ng modules
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectButtonModule } from 'primeng/selectbutton';
+
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { AppRoutingModule } from './app-routing.module';
+
+import { AppComponent } from './app.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UserSettingsComponent } from './pages/user-settings/user-settings.component';
-import { ConfirmComponent } from './components/confirm/confirm.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { PaymentComponent } from './pages/payment/payment.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,8 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     AdminComponent,
     RegisterComponent,
     UserSettingsComponent,
-    ConfirmComponent
+    DialogComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,9 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     ReactiveFormsModule,
     PasswordModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    InputNumberModule,
+    SelectButtonModule
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),

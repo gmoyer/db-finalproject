@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerSubscriptionManager.Context;
 
@@ -10,36 +11,14 @@ using ServerSubscriptionManager.Context;
 namespace ServerSubscriptionManager.Migrations
 {
     [DbContext(typeof(SubscriptionContext))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20241110190534_BalanceMigration")]
+    partial class BalanceMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
-
-            modelBuilder.Entity("ServerSubscriptionManager.Models.Invoice", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("SubscriptionPeriodId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubscriptionPeriodId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Invoices");
-                });
 
             modelBuilder.Entity("ServerSubscriptionManager.Models.Payment", b =>
                 {
@@ -103,9 +82,6 @@ namespace ServerSubscriptionManager.Migrations
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserCount")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("SubscriptionPeriods");
@@ -115,9 +91,6 @@ namespace ServerSubscriptionManager.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("AutoInvoice")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Balance")
@@ -144,23 +117,19 @@ namespace ServerSubscriptionManager.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ServerSubscriptionManager.Models.Invoice", b =>
+            modelBuilder.Entity("SubscriptionPeriodUser", b =>
                 {
-                    b.HasOne("ServerSubscriptionManager.Models.SubscriptionPeriod", "SubscriptionPeriod")
-                        .WithMany("Invoices")
-                        .HasForeignKey("SubscriptionPeriodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<long>("SubscriptionsId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasOne("ServerSubscriptionManager.Models.User", "User")
-                        .WithMany("Invoices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<long>("UsersId")
+                        .HasColumnType("INTEGER");
 
-                    b.Navigation("SubscriptionPeriod");
+                    b.HasKey("SubscriptionsId", "UsersId");
 
-                    b.Navigation("User");
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("SubscriptionPeriodUser");
                 });
 
             modelBuilder.Entity("ServerSubscriptionManager.Models.Payment", b =>
@@ -182,20 +151,28 @@ namespace ServerSubscriptionManager.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SubscriptionPeriodUser", b =>
+                {
+                    b.HasOne("ServerSubscriptionManager.Models.SubscriptionPeriod", null)
+                        .WithMany()
+                        .HasForeignKey("SubscriptionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServerSubscriptionManager.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ServerSubscriptionManager.Models.PaymentMethod", b =>
                 {
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("ServerSubscriptionManager.Models.SubscriptionPeriod", b =>
-                {
-                    b.Navigation("Invoices");
-                });
-
             modelBuilder.Entity("ServerSubscriptionManager.Models.User", b =>
                 {
-                    b.Navigation("Invoices");
-
                     b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618

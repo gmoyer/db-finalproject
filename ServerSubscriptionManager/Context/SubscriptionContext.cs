@@ -9,10 +9,11 @@ namespace ServerSubscriptionManager.Context
         public required DbSet<SubscriptionPeriod> SubscriptionPeriods { get; set; }
         public required DbSet<PaymentMethod> PaymentMethods { get; set; }
         public required DbSet<Payment> Payments { get; set; }
+        public required DbSet<Invoice> Invoices { get; set; }
 
         public string DbPath { get; }
 
-        public SubscriptionContext()
+        public SubscriptionContext(DbContextOptions options) : base(options)
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
