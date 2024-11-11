@@ -1,3 +1,36 @@
-<div class="card">
+<div class="card" *ngIf="user">
+    <div>Balance: ${{ user.balance }}</div>
     <p-button label="Make a payment" [routerLink]="['/payment']" />
+
+    <p-table [value]="payments">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-payment>
+            <tr>
+                <td>{{ payment.amount }}</td>
+                <td>{{ payment.date }}</td>
+                <td>{{ payment.valid ? 'Valid' : 'Pending' }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <ng-container [ngSwitch]="status">
+        <div *ngSwitchCase="'active'">Status: Active</div>
+        <div *ngSwitchCase="'available'">
+            <div>Status: Available to subscribe</div>
+            <div>Minimum Payment Due: {{ minimumPayment }}</div>
+            <p-button label="Purchase" (onClick)="purchaseConfirm = true" [disabled]="!purchasable" />
+        </div>
+        <div *ngSwitchCase="'none'">Status: No subscriptions available at this time.</div>
+    </ng-container>
 </div>
+
+<app-dialog *ngIf="purchaseConfirm"
+    message="Are you sure you want to subscribe?"
+    (confirm)="addInvoice()"
+    (cancel)="purchaseConfirm = false" />

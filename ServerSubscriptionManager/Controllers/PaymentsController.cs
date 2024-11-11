@@ -43,12 +43,14 @@ namespace ServerSubscriptionManager.Controllers
                 return await _context.Payments
                     .Include(p => p.PaymentMethod)
                     .Include(p => p.User)
+                    .OrderByDescending(p => p.Date)
                     .ToListAsync();
             } else
             {
                 return await _context.Payments
                     .Where(p => p.UserId == user.Id)
                     .Include(p => p.PaymentMethod)
+                    .OrderByDescending(p => p.Date)
                     .ToListAsync();
             }
         }
@@ -80,12 +82,21 @@ namespace ServerSubscriptionManager.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> PutPayment(long id, Payment payment)
+        public async Task<IActionResult> PutPayment(long id, Payment paymentDto)
         {
-            if (id != payment.Id)
+            if (id != paymentDto.Id)
             {
                 return BadRequest();
             }
+
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
+            {
+                return NotFound();
+            }
+
+            payment.Amount = paymentDto.Amount;
+            payment.Valid = paymentDto.Valid;
 
             _context.Entry(payment).State = EntityState.Modified;
 

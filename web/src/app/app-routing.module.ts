@@ -9,6 +9,7 @@ import { AdminGuard } from './guards/admin.guard';
 import { RegisterComponent } from './pages/register/register.component';
 import { UserSettingsComponent } from './pages/user-settings/user-settings.component';
 import { PaymentComponent } from './pages/payment/payment.component';
+import { NewSubscriptionComponent } from './pages/new-subscription/new-subscription.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,11 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AuthGuard, AdminGuard],
+  },
+  {
+    path: 'admin/new',
+    component: NewSubscriptionComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { User } from '../models/user';
 import { PaymentMethod } from '../models/payment-method';
 import { Payment } from '../models/payment';
+import { SubscriptionPeriod } from '../models/subscription-period';
 
 const API_URL = 'https://localhost:7141/api';
 
@@ -76,6 +77,38 @@ export class ApiService {
   addPayment(payment: any): Observable<Payment> {
     return this.http.post<Payment>(`${API_URL}/payments`, payment).pipe(
       catchError(this.handleError('Failed to add payment'))
+    );
+  }
+
+  getPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${API_URL}/payments`).pipe(
+      catchError(this.handleError('Failed to get payments'))
+    );
+  }
+
+  updatePayment(payment: Payment): Observable<Payment> {
+    return this.http.put<Payment>(`${API_URL}/payments/${payment.id}`, payment).pipe(
+      catchError(this.handleError('Failed to update payment'))
+    );
+  }
+
+  // ===== Subscription Endpoints =====
+  getSubscriptionPeriods(): Observable<SubscriptionPeriod[]> {
+    return this.http.get<SubscriptionPeriod[]>(`${API_URL}/SubscriptionPeriods`).pipe(
+      catchError(this.handleError('Failed to get subscription periods'))
+    );
+  }
+  addSubscription(subscription: any): Observable<any> {
+    return this.http.post<any>(`${API_URL}/SubscriptionPeriods`, subscription).pipe(
+      catchError(this.handleError('Failed to add subscription'))
+    );
+  }
+
+
+  // ===== Invoice Endpoints =====
+  addInvoice(invoice: any): Observable<any> {
+    return this.http.post<any>(`${API_URL}/invoices`, invoice).pipe(
+      catchError(this.handleError('Failed to add invoice'))
     );
   }
 }

@@ -41,11 +41,14 @@ namespace ServerSubscriptionManager.Controllers
                 return await _context.SubscriptionPeriods
                     .Include(s => s.Invoices)
                     .ThenInclude(i => i.User)
+                    .OrderBy(s => s.StartDate)
                     .ToListAsync();
             }
             else
             {
                 return await _context.SubscriptionPeriods
+                    .Include(s => s.Invoices.Where(i => i.UserId == user.Id))
+                    .OrderBy(s => s.StartDate)
                     .ToListAsync();
             }
         }

@@ -9,13 +9,13 @@ import { Route, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
-  private userSubject = new BehaviorSubject<User | null>(null);
+  private userSubject = new BehaviorSubject<User | null | undefined>(undefined);
   user$ = this.userSubject.asObservable().pipe(
     filter(user => user !== undefined)
   );
 
   constructor(private http: HttpClient, private api: ApiService, private router: Router) {
-    this.tryGetMe();
+    this.updateUser();
   }
 
   // Call the login endpoint and store user data on success
@@ -33,7 +33,7 @@ export class UserService {
     });
   }
 
-  tryGetMe() {
+  updateUser() {
     this.api.getStatus().subscribe(resp => {
         if (resp.authenticated) {
           this.api.getMe().subscribe(user => this.userSubject.next(user));
@@ -43,6 +43,6 @@ export class UserService {
 
   // Method to retrieve the current user synchronously
   get currentUser(): User | null {
-    return this.userSubject.value;
+    return this.userSubject.value != undefined ? this.userSubject.value : null;
   }
 }

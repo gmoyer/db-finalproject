@@ -1,0 +1,31 @@
+<form class="card" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="startDate">Start Date</label>
+        <p-calendar formControlName="startDate" />
+        <div *ngIf="startDate?.invalid && startDate?.touched" class="error">
+            Start Date is required.
+        </div>
+    </div>
+    <div>
+        <label for="endDate">End Date</label>
+        <p-calendar formControlName="endDate" />
+        <div *ngIf="endDate?.invalid && endDate?.touched" class="error">
+            End Date is required.
+        </div>
+    </div>
+    <div>
+        <label for="amount">Server Cost</label>
+        <p-inputNumber 
+            inputId="integeronly" 
+            class="text-input"
+            id="amount"
+            formControlName="amount"
+            required /> 
+        <div *ngIf="amount?.invalid && amount?.touched" class="error">
+            Amount is required.
+        </div>
+    </div>
+    <p-button type="submit" label="Create Subscription" [disabled]="form.invalid"/>
+</form>
+
+<app-dialog *ngIf="success" message="Successfully added subscription!" [cancelable]="false" (confirm)="router.navigate(['/admin'])"></app-dialog>

@@ -9,5 +9,5 @@ export interface Payment {
     paymentMethod: PaymentMethod;
     valid: boolean;
     userId: number;
-    user: User;
+    user?: User;
 }

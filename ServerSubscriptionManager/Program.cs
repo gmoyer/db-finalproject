@@ -12,7 +12,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
-builder.Services.AddDbContext<SubscriptionContext>(options =>
+builder.Services.AddTriggeredDbContext<SubscriptionContext>(options =>
 {
     options.UseTriggers(triggerOptions =>
     {

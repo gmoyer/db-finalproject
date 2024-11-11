@@ -32,6 +32,13 @@
         [feedback]="false"
       />
     </div>
+    <div>
+      <p-checkbox 
+      formControlName="invoice" 
+      id="invoice"
+      [binary]="true" />
+      <label for="ny">Auto pay for new months</label>
+    </div>
     <div *ngIf="usernameExists" class="error">The username already exists. Please choose a new one.</div>
     <div *ngIf="updateFailed" class="error">Failed to update profile. Please try again.</div>
     <div *ngIf="updateSuccess" class="success">Profile updated successfully.</div>

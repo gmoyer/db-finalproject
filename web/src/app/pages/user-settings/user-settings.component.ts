@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -10,7 +10,7 @@ import { User } from '../../models/user';
   templateUrl: './user-settings.component.html',
   styleUrl: './user-settings.component.scss'
 })
-export class UserSettingsComponent {
+export class UserSettingsComponent implements OnInit {
   updateForm: FormGroup;
   usernameExists: boolean = false;
   updateFailed: boolean = false;
@@ -21,7 +21,20 @@ export class UserSettingsComponent {
     this.updateForm = this.formBuilder.group({
       name: [''],
       username: [''],
-      password: ['']
+      password: [''],
+      invoice: [false]
+    });
+  }
+
+  ngOnInit(): void {
+    this.userService.user$.subscribe(user => {
+      if (user) {
+        this.updateForm.patchValue({
+          name: user.name,
+          username: user.username,
+          invoice: user.autoInvoice
+        });
+      }
     });
   }
 
@@ -37,6 +50,10 @@ export class UserSettingsComponent {
     return this.updateForm.get('password');
   }
 
+  get invoice() {
+    return this.updateForm.get('invoice');
+  }
+
   onSubmit() {
     this.updateFailed = false;
     this.usernameExists = false;
@@ -48,12 +65,15 @@ export class UserSettingsComponent {
         name: formData.name,
         username: formData.username,
         password: formData.password,
-        role: ''
+        role: '',
+        autoInvoice: formData.invoice,
+        balance: 0
       };
 
       this.api.updateUser(user).subscribe({
         next: () => {
           this.updateSuccess = true;
+          this.userService.updateUser();
         },
         error: (error) => {
           switch (error.error) {

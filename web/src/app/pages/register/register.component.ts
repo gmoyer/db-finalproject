@@ -61,7 +61,9 @@ export class RegisterComponent {
         name: formData.name,
         username: formData.username,
         password: formData.password,
-        role: 'User'
+        role: 'User',
+        autoInvoice: false,
+        balance: 0
       };
 
       this.api.addUser(user).subscribe({

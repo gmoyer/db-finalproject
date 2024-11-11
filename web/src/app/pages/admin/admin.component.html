@@ -1,1 +1,28 @@
-<p>admin works!</p>
+<div class="card">
+    <p-button label="Add Subscription Period" [routerLink]="['new']" />
+    <p-table [value]="payments">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-payment>
+            <tr>
+                <td>{{ payment.user.name }}</td>
+                <td>{{ payment.amount }}</td>
+                <td>{{ payment.paymentMethod.name }}</td>
+                <td>{{ payment.date }}</td>
+                <td>
+                    <p-button label="Approve" (onClick)="approvePayment(payment)" />
+                    <p-button label="Delete" (onClick)="deletePayment(payment)" />
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<app-dialog *ngIf="updateSuccess" message="Payment updated successfully!" [cancelable]="false" (confirm)="updateSuccess = false" />

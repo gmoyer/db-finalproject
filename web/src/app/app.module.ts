@@ -7,6 +7,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TableModule } from 'primeng/table';
+import { CalendarModule } from 'primeng/calendar';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +27,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { UserSettingsComponent } from './pages/user-settings/user-settings.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { PaymentComponent } from './pages/payment/payment.component';
+import { StatusComponent } from './components/status/status.component';
+import { NewSubscriptionComponent } from './pages/new-subscription/new-subscription.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +41,9 @@ import { PaymentComponent } from './pages/payment/payment.component';
     RegisterComponent,
     UserSettingsComponent,
     DialogComponent,
-    PaymentComponent
+    PaymentComponent,
+    StatusComponent,
+    NewSubscriptionComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +54,10 @@ import { PaymentComponent } from './pages/payment/payment.component';
     InputTextModule,
     ButtonModule,
     InputNumberModule,
-    SelectButtonModule
+    SelectButtonModule,
+    CheckboxModule,
+    TableModule,
+    CalendarModule
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),

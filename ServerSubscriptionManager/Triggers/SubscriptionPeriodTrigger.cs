@@ -19,6 +19,7 @@ namespace ServerSubscriptionManager.Triggers
             }
 
             var users = _context.Users.ToList();
+            var invoices = _context.Invoices.Where(i => i.SubscriptionPeriodId == subscriptionPeriod.Id).ToList();
 
             switch (context.ChangeType)
             {
@@ -39,7 +40,7 @@ namespace ServerSubscriptionManager.Triggers
                     break;
                 case ChangeType.Modified:
                     // Need to update all the invoices with the new cost
-                    foreach (var invoice in subscriptionPeriod.Invoices)
+                    foreach (var invoice in invoices)
                     {
                         invoice.Amount = subscriptionPeriod.UserCost;
                         _context.Entry(invoice).State = EntityState.Modified;

@@ -125,6 +125,19 @@ namespace ServerSubscriptionManager.Controllers
                 userId = invoiceDto.UserId;
             }
 
+            var invoiceUser = await _context.Users.FindAsync(userId);
+            var subscriptionPeriod = await _context.SubscriptionPeriods.FindAsync(invoiceDto.SubscriptionPeriodId);
+
+            if (invoiceUser == null || subscriptionPeriod == null)
+            {
+                return BadRequest();
+
+            }
+            if (invoiceUser.Balance < subscriptionPeriod.NextUserCost)
+            {
+                return BadRequest("User does not have enough balance to generate invoice");
+            }
+
             var invoice = new Invoice
             {
                 UserId = userId,
