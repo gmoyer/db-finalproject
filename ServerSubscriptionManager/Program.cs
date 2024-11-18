@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSubscriptionManager.Context;
+using ServerSubscriptionManager.Filters;
 using ServerSubscriptionManager.Triggers;
 using System.Security.Claims;
 
@@ -7,11 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<TransactionWrapper>();
+})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+
+
 builder.Services.AddTriggeredDbContext<SubscriptionContext>(options =>
 {
     options.UseTriggers(triggerOptions =>
