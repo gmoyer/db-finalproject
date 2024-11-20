@@ -14,16 +14,12 @@ namespace ServerSubscriptionManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubscriptionPeriodsController : ControllerBase
+    public class SubscriptionPeriodsController(UserService userService, SubscriptionContext context, IEntityService<SubscriptionPeriod> periodService) : ControllerBase
     {
-        private readonly SubscriptionContext _context;
-        private readonly UserService _userService;
+        private readonly SubscriptionContext _context = context;
+        private readonly UserService _userService = userService;
+        private readonly IEntityService<SubscriptionPeriod> _periodService = periodService;
 
-        public SubscriptionPeriodsController(SubscriptionContext context)
-        {
-            _context = context;
-            _userService = new UserService(context);
-        }
 
         // GET: api/SubscriptionPeriods
         [HttpGet]
@@ -35,22 +31,29 @@ namespace ServerSubscriptionManager.Controllers
             {
                 return Unauthorized();
             }
+            return await _context.SubscriptionPeriods
+                .Include(s => s.Invoices.Where(i => i.UserId == user.Id))
+                .OrderBy(s => s.StartDate)
+                .ToListAsync();
+        }
 
-            if (user.Role == "Admin")
+        // GET: api/SubscriptionPeriods/all
+        [HttpGet("all")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult<IEnumerable<SubscriptionPeriod>>> GetAllSubscriptionPeriods()
+        {
+            var user = await _userService.GetRequestingUser(User);
+
+            if (user == null)
             {
-                return await _context.SubscriptionPeriods
-                    .Include(s => s.Invoices)
-                    .ThenInclude(i => i.User)
-                    .OrderBy(s => s.StartDate)
-                    .ToListAsync();
+                return Unauthorized();
             }
-            else
-            {
-                return await _context.SubscriptionPeriods
-                    .Include(s => s.Invoices.Where(i => i.UserId == user.Id))
-                    .OrderBy(s => s.StartDate)
-                    .ToListAsync();
-            }
+
+            return await _context.SubscriptionPeriods
+                .Include(s => s.Invoices)
+                .ThenInclude(i => i.User)
+                .OrderBy(s => s.StartDate)
+                .ToListAsync();
         }
 
         // GET: api/SubscriptionPeriods/5
@@ -78,22 +81,9 @@ namespace ServerSubscriptionManager.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(subscriptionPeriod).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SubscriptionPeriodExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+            var success = await _periodService.UpdateAsync(subscriptionPeriod);
+            if (!success) {
+                return BadRequest();
             }
 
             return NoContent();
@@ -113,8 +103,11 @@ namespace ServerSubscriptionManager.Controllers
                 ServerCost = subscriptionPeriodDto.ServerCost
             };
 
-            _context.SubscriptionPeriods.Add(subscriptionPeriod);
-            await _context.SaveChangesAsync();
+            var success = await _periodService.AddAsync(subscriptionPeriod);
+            if (!success)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction("GetSubscriptionPeriod", new { id = subscriptionPeriod.Id }, subscriptionPeriod);
         }
@@ -130,8 +123,11 @@ namespace ServerSubscriptionManager.Controllers
                 return NotFound();
             }
 
-            _context.SubscriptionPeriods.Remove(subscriptionPeriod);
-            await _context.SaveChangesAsync();
+            var success = await _periodService.RemoveAsync(id);
+            if (!success)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }

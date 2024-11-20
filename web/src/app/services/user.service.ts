@@ -14,7 +14,7 @@ export class UserService {
     filter(user => user !== undefined)
   );
 
-  constructor(private http: HttpClient, private api: ApiService, private router: Router) {
+  constructor(private api: ApiService, private router: Router) {
     this.updateUser();
   }
 

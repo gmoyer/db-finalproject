@@ -93,8 +93,16 @@ export class ApiService {
   }
 
   // ===== Subscription Endpoints =====
+
+  // Get subscription periods for the user
   getSubscriptionPeriods(): Observable<SubscriptionPeriod[]> {
     return this.http.get<SubscriptionPeriod[]>(`${API_URL}/SubscriptionPeriods`).pipe(
+      catchError(this.handleError('Failed to get subscription periods'))
+    );
+  }
+  // Get subscription periods that show all user invoices as well
+  getAllSubscriptionPeriods(): Observable<SubscriptionPeriod[]> {
+    return this.http.get<SubscriptionPeriod[]>(`${API_URL}/SubscriptionPeriods/all`).pipe(
       catchError(this.handleError('Failed to get subscription periods'))
     );
   }

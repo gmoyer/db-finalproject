@@ -14,16 +14,11 @@ namespace ServerSubscriptionManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController(UserService userService, SubscriptionContext context) : ControllerBase
     {
-        private readonly SubscriptionContext _context;
-        private readonly UserService _userService;
+        private readonly SubscriptionContext _context = context;
+        private readonly UserService _userService = userService;
 
-        public UsersController(SubscriptionContext context)
-        {
-            _context = context;
-            _userService = new UserService(context);
-        }
 
         // GET: api/Users
         [HttpGet]

@@ -19,18 +19,21 @@
         </ng-template>
     </p-table>
 
-    <ng-container [ngSwitch]="status">
-        <div *ngSwitchCase="'active'">Status: Active</div>
-        <div *ngSwitchCase="'available'">
-            <div>Status: Available to subscribe</div>
-            <div>Minimum Payment Due: {{ minimumPayment }}</div>
-            <p-button label="Purchase" (onClick)="purchaseConfirm = true" [disabled]="!purchasable" />
-        </div>
-        <div *ngSwitchCase="'none'">Status: No subscriptions available at this time.</div>
+    <ng-container *ngFor="let period of periods">
+        <h3>{{ period.name }}</h3>
+        <ng-container [ngSwitch]="period.status">
+            <div *ngSwitchCase="'active'">Status: Active</div>
+            <div *ngSwitchCase="'available'">
+                <div>Status: Available to subscribe</div>
+                <div>Minimum Payment Due: ${{ period.nextUserCost }}</div>
+                <p-button label="Purchase" (onClick)="period.purchaseConfirm = true" [disabled]="!period.purchasable" />
+            </div>
+        </ng-container>
     </ng-container>
 </div>
-
-<app-dialog *ngIf="purchaseConfirm"
-    message="Are you sure you want to subscribe?"
-    (confirm)="addInvoice()"
-    (cancel)="purchaseConfirm = false" />
+<ng-container *ngFor="let period of periods">
+    <app-dialog *ngIf="period.purchaseConfirm"
+        message="Are you sure you want to subscribe?"
+        (confirm)="addInvoice(period)"
+        (cancel)="period.purchaseConfirm = false" />
+</ng-container>

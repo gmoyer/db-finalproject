@@ -1,32 +1,32 @@
 using Microsoft.EntityFrameworkCore;
 using ServerSubscriptionManager.Context;
 using ServerSubscriptionManager.Filters;
-using ServerSubscriptionManager.Triggers;
+using ServerSubscriptionManager.Models;
+using ServerSubscriptionManager.Services;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<TransactionWrapper>();
-})
+builder.Services
+    .AddControllers(options =>
+        {
+            options.Filters.Add<TransactionWrapper>();
+        })
     .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    });
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
 
-builder.Services.AddTriggeredDbContext<SubscriptionContext>(options =>
-{
-    options.UseTriggers(triggerOptions =>
-    {
-        triggerOptions.AddTrigger<PaymentTrigger>();
-        triggerOptions.AddTrigger<InvoiceTrigger>();
-        triggerOptions.AddTrigger<SubscriptionPeriodTrigger>();
-    });
-});
+builder.Services.AddDbContext<SubscriptionContext>();
+
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IEntityService<Payment>, PaymentService>();
+builder.Services.AddScoped<IEntityService<Invoice>, InvoiceService>();
+builder.Services.AddScoped<IEntityService<SubscriptionPeriod>, SubscriptionPeriodService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

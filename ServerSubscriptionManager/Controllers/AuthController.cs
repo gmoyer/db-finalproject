@@ -11,16 +11,9 @@ namespace ServerSubscriptionManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(UserService userService) : ControllerBase
     {
-        private readonly SubscriptionContext _context;
-        private readonly UserService _userService;
-
-        public AuthController(SubscriptionContext context)
-        {
-            _context = context;
-            _userService = new UserService(context);
-        }
+        private readonly UserService _userService = userService;
 
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login([FromBody] LoginRequest loginRequest)

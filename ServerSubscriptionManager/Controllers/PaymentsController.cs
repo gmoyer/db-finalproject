@@ -15,16 +15,12 @@ namespace ServerSubscriptionManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentsController : ControllerBase
+    public class PaymentsController(UserService userService, SubscriptionContext context, IEntityService<Payment> paymentService) : ControllerBase
     {
-        private readonly SubscriptionContext _context;
-        private readonly UserService _userService;
+        private readonly SubscriptionContext _context = context;
+        private readonly UserService _userService = userService;
+        private readonly IEntityService<Payment> _paymentService = paymentService;
 
-        public PaymentsController(SubscriptionContext context)
-        {
-            _context = context;
-            _userService = new UserService(context);
-        }
 
         // GET: api/Payments
         [HttpGet]
@@ -89,31 +85,11 @@ namespace ServerSubscriptionManager.Controllers
                 return BadRequest();
             }
 
-            var payment = await _context.Payments.FindAsync(id);
-            if (payment == null)
-            {
-                return NotFound();
-            }
+            var success = await _paymentService.UpdateAsync(paymentDto);
 
-            payment.Amount = paymentDto.Amount;
-            payment.Valid = paymentDto.Valid;
-
-            _context.Entry(payment).State = EntityState.Modified;
-
-            try
+            if (!success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PaymentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
@@ -146,8 +122,12 @@ namespace ServerSubscriptionManager.Controllers
                 payment.Valid = true;
             }
 
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
+            var success = await _paymentService.AddAsync(payment);
+
+            if (!success)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
         }
@@ -168,8 +148,12 @@ namespace ServerSubscriptionManager.Controllers
                 return Unauthorized();
             }
 
-            _context.Payments.Remove(payment);
-            await _context.SaveChangesAsync();
+            var success = await _paymentService.RemoveAsync(id);
+
+            if (!success)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }

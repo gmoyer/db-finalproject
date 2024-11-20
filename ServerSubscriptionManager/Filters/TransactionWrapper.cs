@@ -5,14 +5,9 @@ using System.Data;
 
 namespace ServerSubscriptionManager.Filters
 {
-    public class TransactionWrapper : IAsyncActionFilter
+    public class TransactionWrapper(SubscriptionContext context) : IAsyncActionFilter
     {
-        private readonly SubscriptionContext _context;
-
-        public TransactionWrapper(SubscriptionContext context)
-        {
-            _context = context;
-        }
+        private readonly SubscriptionContext _context = context;
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -20,11 +15,11 @@ namespace ServerSubscriptionManager.Filters
             var executedContext = await next(); // executing the API controller action
             if (executedContext.Exception == null)
             {
-                await transaction.CommitAsync(); // commit the transaction if no exceptions
+                await transaction.CommitAsync();
             }
             else
             {
-                await transaction.RollbackAsync(); // rollback the transaction if an exception occurred
+                await transaction.RollbackAsync();
             }
         }
     }

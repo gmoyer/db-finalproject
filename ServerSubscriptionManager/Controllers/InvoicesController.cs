@@ -14,16 +14,11 @@ namespace ServerSubscriptionManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InvoicesController : ControllerBase
+    public class InvoicesController(UserService userService, SubscriptionContext context, IEntityService<Invoice> invoiceService) : ControllerBase
     {
-        private readonly SubscriptionContext _context;
-        private readonly UserService _userService;
-
-        public InvoicesController(SubscriptionContext context)
-        {
-            _context = context;
-            _userService = new UserService(context);
-        }
+        private readonly SubscriptionContext _context = context;
+        private readonly UserService _userService = userService;
+        private readonly IEntityService<Invoice> _invoiceService = invoiceService;
 
         // GET: api/Invoices
         [HttpGet]
@@ -84,22 +79,11 @@ namespace ServerSubscriptionManager.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(invoice).State = EntityState.Modified;
+            var success = await _invoiceService.UpdateAsync(invoice);
 
-            try
+            if (!success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InvoiceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -125,27 +109,17 @@ namespace ServerSubscriptionManager.Controllers
                 userId = invoiceDto.UserId;
             }
 
-            var invoiceUser = await _context.Users.FindAsync(userId);
-            var subscriptionPeriod = await _context.SubscriptionPeriods.FindAsync(invoiceDto.SubscriptionPeriodId);
-
-            if (invoiceUser == null || subscriptionPeriod == null)
-            {
-                return BadRequest();
-
-            }
-            if (invoiceUser.Balance < subscriptionPeriod.NextUserCost)
-            {
-                return BadRequest("User does not have enough balance to generate invoice");
-            }
-
             var invoice = new Invoice
             {
                 UserId = userId,
                 SubscriptionPeriodId = invoiceDto.SubscriptionPeriodId
             };
 
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
+            var success = await _invoiceService.AddAsync(invoice);
+            if (!success)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction("GetInvoice", new { id = invoice.Id }, invoice);
         }
@@ -161,8 +135,11 @@ namespace ServerSubscriptionManager.Controllers
                 return NotFound();
             }
 
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            var success = await _invoiceService.RemoveAsync(id);
+            if (!success)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

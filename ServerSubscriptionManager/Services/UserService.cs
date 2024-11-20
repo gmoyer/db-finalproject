@@ -5,14 +5,9 @@ using System.Security.Claims;
 
 namespace ServerSubscriptionManager.Services
 {
-    public class UserService
+    public class UserService(SubscriptionContext context)
     {
-        private readonly SubscriptionContext _context;
-
-        public UserService(SubscriptionContext context)
-        {
-            _context = context;
-        }
+        private readonly SubscriptionContext _context = context;
 
         public async Task<User?> ValidateUserAsync(string username, string password)
         {
