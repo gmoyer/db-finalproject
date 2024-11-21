@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
     }
     this.api.addInvoice(invoice).subscribe(() => {
       console.log('Invoice added');
-      this.subscriptionService.populatePeriods();
+      this.subscriptionService.populatePeriods(); // refresh subscription period information
       this.ngOnInit(); // refresh the page
     });
   }
