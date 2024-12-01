@@ -16,20 +16,36 @@
     </div>
 
     <div>
-        <label for="username">Username</label>
-        <input
-          class="text-input"
-          id="username"
-          formControlName="username"
-          type="text"
-          pInputText
-          placeholder="Enter your username"
-          required
-        />
-        <div *ngIf="username?.invalid && username?.touched" class="error">
-          Username is required.
-        </div>
+      <label for="email">Email</label>
+      <input
+        class="text-input"
+        id="email"
+        formControlName="email"
+        type="text"
+        pInputText
+        placeholder="Enter your email"
+        required
+      />
+      <div *ngIf="email?.invalid && email?.touched" class="error">
+        Email is required.
       </div>
+    </div>
+
+    <div>
+      <label for="playertag">Minecraft Playertag</label>
+      <input
+        class="text-input"
+        id="playertag"
+        formControlName="playertag"
+        type="text"
+        pInputText
+        placeholder="Enter your playertag"
+        required
+      />
+      <div *ngIf="playertag?.invalid && playertag?.touched" class="error">
+        Playertag is required.
+      </div>
+    </div>
   
     <div>
       <label for="password">Password</label>
@@ -63,7 +79,7 @@
         </div>
     </div>
 
-    <div *ngIf="usernameExists" class="error">The username already exists. Please choose a new one.</div>
+    <div *ngIf="emailExists" class="error">The email already exists. Please choose a new one.</div>
     <div *ngIf="registerFailed" class="error">There was an error in registering. Please try again.</div>
     <p-button type="submit" label="Register" [disabled]="registerForm.invalid"/>
   </form>

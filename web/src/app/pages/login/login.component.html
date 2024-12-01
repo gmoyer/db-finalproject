@@ -2,18 +2,18 @@
   <div *ngIf="registerRedirect" class="success">Registration successful! Please log in.</div>
   <div *ngIf="deleteRedirect" class="success">User deleted successfully.</div>
   <div>
-    <label for="username">Username</label>
+    <label for="email">Email</label>
     <input
       class="text-input"
-      id="username"
-      formControlName="username"
+      id="email"
+      formControlName="email"
       type="text"
       pInputText
-      placeholder="Enter your username"
+      placeholder="Enter your email"
       required
     />
-    <div *ngIf="username?.invalid && username?.touched" class="error">
-      Username is required.
+    <div *ngIf="email?.invalid && email?.touched" class="error">
+      Email is required.
     </div>
   </div>
 
@@ -32,7 +32,7 @@
       Password is required.
     </div>
   </div>
-  <div *ngIf="loginFailed" class="error">Invalid username or password. Please try again.</div>
+  <div *ngIf="loginFailed" class="error">Invalid email or password. Please try again.</div>
   <p-button type="submit" label="Sign In" [disabled]="loginForm.invalid"/>
   <p-button label="Sign Up" [routerLink]="['/register']"/>
 </form>

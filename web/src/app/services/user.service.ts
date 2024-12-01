@@ -19,8 +19,8 @@ export class UserService {
   }
 
   // Call the login endpoint and store user data on success
-  login(username: string, password: string): Observable<User> {
-    return this.api.login(username, password).pipe(map(user => {
+  login(email: string, password: string): Observable<User> {
+    return this.api.login(email, password).pipe(map(user => {
         this.userSubject.next(user);
         return user;
     }));

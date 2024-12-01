@@ -1,5 +1,6 @@
 <div class="card">
     <p-button label="Add Subscription Period" [routerLink]="['new']" />
+    <h2>Payments</h2>
     <p-table [value]="payments">
         <ng-template pTemplate="header">
             <tr>
@@ -23,6 +24,28 @@
             </tr>
         </ng-template>
     </p-table>
+
+    <h2>Current Subscription Period</h2>
+    <p-table *ngIf="currentPeriod" [value]="currentPeriod.invoices">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Player Tag</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-invoice>
+            <tr>
+                <td>{{ invoice.user.name }}</td>
+                <td>{{ invoice.user.email }}</td>
+                <td>{{ invoice.user.playertag }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <h2>Rollover Commands</h2>
+
+    <div *ngFor="let command of rolloverCommands">{{ command }}</div>
 </div>
 
 <app-dialog *ngIf="updateSuccess" message="Payment updated successfully!" [cancelable]="false" (confirm)="updateSuccess = false" />

@@ -11,16 +11,27 @@
         />
       </div>
     <div>
-        <label for="username">Edit username</label>
-        <input
-          class="text-input"
-          id="username"
-          formControlName="username"
-          type="text"
-          pInputText
-          placeholder="Enter a new username"
-        />
-      </div>
+      <label for="email">Edit email</label>
+      <input
+        class="text-input"
+        id="email"
+        formControlName="email"
+        type="text"
+        pInputText
+        placeholder="Enter a new email"
+      />
+    </div>
+    <div>
+      <label for="playertag">Edit playertag</label>
+      <input
+        class="text-input"
+        id="playertag"
+        formControlName="playertag"
+        type="text"
+        pInputText
+        placeholder="Enter a new playertag"
+      />
+    </div>
     <div>
       <label for="password">Edit password</label>
       <p-password
@@ -39,7 +50,7 @@
       [binary]="true" />
       <label for="ny">Auto pay for new months</label>
     </div>
-    <div *ngIf="usernameExists" class="error">The username already exists. Please choose a new one.</div>
+    <div *ngIf="emailExists" class="error">The email already exists. Please choose a new one.</div>
     <div *ngIf="updateFailed" class="error">Failed to update profile. Please try again.</div>
     <div *ngIf="updateSuccess" class="success">Profile updated successfully.</div>
     <p-button type="submit" label="Update Profile" [disabled]="updateForm.invalid"/>

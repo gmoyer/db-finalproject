@@ -18,7 +18,7 @@ namespace ServerSubscriptionManager.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login([FromBody] LoginRequest loginRequest)
         {
-            var user = await _userService.ValidateUserAsync(loginRequest.Username, loginRequest.Password);
+            var user = await _userService.ValidateUserAsync(loginRequest.Email, loginRequest.Password);
             if (user == null)
             {
                 return Unauthorized("Invalid credentials");
@@ -26,7 +26,7 @@ namespace ServerSubscriptionManager.Controllers
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.Username),
+                new(ClaimTypes.Name, user.Email),
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Role, user.Role)
             };

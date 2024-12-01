@@ -81,18 +81,22 @@ namespace ServerSubscriptionManager.Controllers
             }
 
             var users = await _context.Users.ToListAsync();
-            if (users.Any(u => u.Username == userDto.Username && u != user))
+            if (users.Any(u => u.Email == userDto.Email && u != user))
             {
-                return BadRequest("Username already exists");
+                return BadRequest("Email already exists");
             }
 
             if (userDto.Name != "")
             {
                 user.Name = userDto.Name;
             }
-            if (userDto.Username != "")
+            if (userDto.Email != "")
             {
-                user.Username = userDto.Username;
+                user.Email = userDto.Email;
+            }
+            if (userDto.Playertag != "")
+            {
+                user.Playertag = userDto.Playertag;
             }
             if (userDto.Password != "")
             {
@@ -130,15 +134,16 @@ namespace ServerSubscriptionManager.Controllers
         public async Task<ActionResult<User>> PostUser(User userDto)
         {
             var users = await _context.Users.ToListAsync();
-            if (users.Any(u => u.Username == userDto.Username))
+            if (users.Any(u => u.Email == userDto.Email))
             {
-                return BadRequest("Username already exists");
+                return BadRequest("Email already exists");
             }
 
             var user = new User
             {
                 Name = userDto.Name,
-                Username = userDto.Username,
+                Email = userDto.Email,
+                Playertag = userDto.Playertag,
                 Password = userDto.Password
             };
 

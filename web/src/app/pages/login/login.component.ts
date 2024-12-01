@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
     this.deleteRedirect = this.route.snapshot.queryParamMap.get('deleteSuccess') === 'true';
   }
 
-  get username() {
-    return this.loginForm.get('username');
+  get email() {
+    return this.loginForm.get('email');
   }
 
   get password() {
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const formData = this.loginForm.value;
       
-      this.userService.login(formData.username, formData.password).subscribe({
+      this.userService.login(formData.email, formData.password).subscribe({
         next: (user) => {
           if (user.role == 'Admin') {
             this.router.navigate(['/admin']);

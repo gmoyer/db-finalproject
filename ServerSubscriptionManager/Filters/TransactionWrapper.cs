@@ -13,7 +13,11 @@ namespace ServerSubscriptionManager.Filters
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
             var executedContext = await next(); // executing the API controller action
-            if (executedContext.Exception == null)
+
+            // The status code indicates an error in the range [400, 600).
+            var statusCodeError = executedContext.HttpContext.Response.StatusCode >= 400 && executedContext.HttpContext.Response.StatusCode < 600;
+
+            if (executedContext.Exception == null && !statusCodeError)
             {
                 await transaction.CommitAsync();
             }

@@ -12,7 +12,7 @@ import { User } from '../../models/user';
 })
 export class UserSettingsComponent implements OnInit {
   updateForm: FormGroup;
-  usernameExists: boolean = false;
+  emailExists: boolean = false;
   updateFailed: boolean = false;
   updateSuccess: boolean = false;
   confirmDelete: boolean = false;
@@ -20,7 +20,8 @@ export class UserSettingsComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService, private api: ApiService) {
     this.updateForm = this.formBuilder.group({
       name: [''],
-      username: [''],
+      email: [''],
+      playertag: [''],
       password: [''],
       invoice: [false]
     });
@@ -31,7 +32,8 @@ export class UserSettingsComponent implements OnInit {
       if (user) {
         this.updateForm.patchValue({
           name: user.name,
-          username: user.username,
+          email: user.email,
+          playertag: user.playertag,
           invoice: user.autoInvoice
         });
       }
@@ -42,8 +44,12 @@ export class UserSettingsComponent implements OnInit {
     return this.updateForm.get('name');
   }
 
-  get username() {
-    return this.updateForm.get('username');
+  get email() {
+    return this.updateForm.get('email');
+  }
+
+  get playertag() {
+    return this.updateForm.get('playertag');
   }
 
   get password() {
@@ -56,14 +62,15 @@ export class UserSettingsComponent implements OnInit {
 
   onSubmit() {
     this.updateFailed = false;
-    this.usernameExists = false;
+    this.emailExists = false;
     this.updateSuccess = false;
     if (this.updateForm.valid && this.userService.currentUser) {
       const formData = this.updateForm.value;
       const user: User = {
         id: this.userService.currentUser.id,
         name: formData.name,
-        username: formData.username,
+        email: formData.email,
+        playertag: formData.playertag,
         password: formData.password,
         role: '',
         autoInvoice: formData.invoice,
@@ -77,8 +84,8 @@ export class UserSettingsComponent implements OnInit {
         },
         error: (error) => {
           switch (error.error) {
-            case 'Username already exists':
-              this.usernameExists = true;
+            case 'Email already exists':
+              this.emailExists = true;
               break;
             default:
               this.updateFailed = true;

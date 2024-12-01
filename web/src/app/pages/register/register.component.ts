@@ -12,13 +12,14 @@ import { ApiService } from '../../services/api.service';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  usernameExists: boolean = false;
+  emailExists: boolean = false;
   registerFailed: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService, private api: ApiService) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
-      username: ['', Validators.required],
+      email: ['', Validators.required],
+      playertag: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     },
@@ -39,8 +40,12 @@ export class RegisterComponent {
     return this.registerForm.get('name');
   }
 
-  get username() {
-    return this.registerForm.get('username');
+  get email() {
+    return this.registerForm.get('email');
+  }
+
+  get playertag() {
+    return this.registerForm.get('playertag');
   }
 
   get password() {
@@ -53,13 +58,14 @@ export class RegisterComponent {
 
   onSubmit() {
     this.registerFailed = false;
-    this.usernameExists = false;
+    this.emailExists = false;
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
       const user: User = {
         id: 0,
         name: formData.name,
-        username: formData.username,
+        email: formData.email,
+        playertag: formData.playertag,
         password: formData.password,
         role: 'User',
         autoInvoice: false,
@@ -72,8 +78,8 @@ export class RegisterComponent {
         },
         error: (error) => {
           switch (error.error) {
-            case 'Username already exists':
-              this.usernameExists = true;
+            case 'Email already exists':
+              this.emailExists = true;
               break;
             default:
               this.registerFailed = true;

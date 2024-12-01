@@ -30,8 +30,8 @@ export class ApiService {
     );
   }
 
-  login(username: string, password: string): Observable<User> {
-    return this.http.post<User>(`${API_URL}/auth/login`, { username, password }).pipe(
+  login(email: string, password: string): Observable<User> {
+    return this.http.post<User>(`${API_URL}/auth/login`, { email, password }).pipe(
       catchError(this.handleError('Failed to login'))
     );
   }
@@ -89,6 +89,12 @@ export class ApiService {
   updatePayment(payment: Payment): Observable<Payment> {
     return this.http.put<Payment>(`${API_URL}/payments/${payment.id}`, payment).pipe(
       catchError(this.handleError('Failed to update payment'))
+    );
+  }
+
+  deletePayment(id: number): Observable<string> {
+    return this.http.delete<string>(`${API_URL}/payments/${id}`, { responseType: 'text' as 'json' }).pipe(
+      catchError(this.handleError('Failed to delete payment'))
     );
   }
 

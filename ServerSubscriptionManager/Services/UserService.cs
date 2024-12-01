@@ -9,9 +9,9 @@ namespace ServerSubscriptionManager.Services
     {
         private readonly SubscriptionContext _context = context;
 
-        public async Task<User?> ValidateUserAsync(string username, string password)
+        public async Task<User?> ValidateUserAsync(string email, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
