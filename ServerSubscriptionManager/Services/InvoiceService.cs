@@ -30,11 +30,6 @@ namespace ServerSubscriptionManager.Services
                 return false;
             }
 
-            if (subscriptionPeriod.NextUserCost > user.Balance)
-            {
-                return false;
-            }
-
             subscriptionPeriod.UserCount++;
 
             _context.Invoices.Add(invoice);

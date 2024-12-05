@@ -2,15 +2,12 @@
     <div>
         <label for="startDate">Start Date</label>
         <p-calendar formControlName="startDate" />
-        <div *ngIf="startDate?.invalid && startDate?.touched" class="error">
-            Start Date is required.
-        </div>
     </div>
     <div>
         <label for="endDate">End Date</label>
         <p-calendar formControlName="endDate" />
-        <div *ngIf="endDate?.invalid && endDate?.touched" class="error">
-            End Date is required.
+        <div *ngIf="endDate?.errors?.['dateLessThan'] && endDate?.touched" class="error">
+            End Date must be after Start Date.
         </div>
     </div>
     <div>

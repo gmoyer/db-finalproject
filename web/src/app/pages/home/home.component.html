@@ -1,4 +1,5 @@
 <div class="card" *ngIf="user">
+    <p-button label="Admin Page" *ngIf="user.role == 'Admin'" [routerLink]="['/admin']" />
     <div>Balance: ${{ user.balance }}</div>
     <p-button label="Make a payment" [routerLink]="['/payment']" />
 

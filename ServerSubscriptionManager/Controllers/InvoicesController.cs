@@ -96,10 +96,16 @@ namespace ServerSubscriptionManager.Controllers
         public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoiceDto)
         {
             var user = await _userService.GetRequestingUser(User);
+            var subscriptionPeriod = await _context.SubscriptionPeriods.FindAsync(invoiceDto.SubscriptionPeriodId);
 
             if (user == null)
             {
                 return Unauthorized();
+            }
+
+            if (subscriptionPeriod == null)
+            {
+                return BadRequest();
             }
 
             var userId = user.Id;
@@ -107,6 +113,11 @@ namespace ServerSubscriptionManager.Controllers
             if (user.Role == "Admin")
             {
                 userId = invoiceDto.UserId;
+            }
+
+            if (subscriptionPeriod.NextUserCost > user.Balance)
+            {
+                return BadRequest("User does not have enough balance");
             }
 
             var invoice = new Invoice

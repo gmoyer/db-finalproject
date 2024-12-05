@@ -19,7 +19,19 @@ export class NewSubscriptionComponent {
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
       amount: [null, Validators.required],
-    });
+    }, { validator: this.dateLessThan('startDate', 'endDate') });
+  }
+  dateLessThan(startControl: string, endControl: string): any {
+    return (formGroup: FormGroup) => {
+      const start = formGroup.controls[startControl];
+      const end = formGroup.controls[endControl];
+
+      if (start.value && end.value && moment(start.value).isAfter(moment(end.value))) {
+        end.setErrors({ dateLessThan: true });
+      } else {
+        end.setErrors(null);
+      }
+    };
   }
 
   get startDate() {
