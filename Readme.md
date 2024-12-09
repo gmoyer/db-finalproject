@@ -10,7 +10,7 @@
 This project is a basic server subscription manager for the web. It manages a backend SQLite database with EF-Core and a frontend built with Angular. The user can create an account, add a payment and subscribe to a subscription period. Any payments must be approved by an admin, who is created by manually changing the role of a user in the database from "User" to "Admin". The admin can also create subscription periods and view who is active for the current period.
 
 ## Features
-- User authentication and authorization
+- Cookie based user authentication and authorization
 - Data entry and validation
 - Advanced querying capabilities
 - Transactions and isolation levels
