@@ -38,6 +38,6 @@ This project is a basic server subscription manager for the web. It manages a ba
     npm start
     ```
 2. Start the backend:
-    a. Double click the `ServerSubscriptionManager/ServerSubscriptionManager.sln` file to open Visual Studio.
-    b. Click the play button to begin.
+    - a. Double click the `ServerSubscriptionManager/ServerSubscriptionManager.sln` file to open Visual Studio.
+    - b. Click the play button to begin.
 3. Open your browser and navigate to `http://localhost:3200`.
